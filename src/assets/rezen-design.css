@@ -1,0 +1,64 @@
+:root {
+  /* Color Palette */
+  --color-background: #1A1A1A;
+  --color-primary: #4CAF50;
+  --color-secondary: #795548;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #BDBDBD;
+  --color-accent: #FFC107;
+
+  /* Typography */
+  --font-family: "Roboto", Arial, sans-serif;
+  --font-size-heading1: 2.5rem;
+  --font-size-heading2: 2rem;
+  --font-size-heading3: 1.5rem;
+  --font-size-body: 1rem;
+  --font-size-small: 0.875rem;
+  --font-weight-bold: 700;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
+
+  /* Layout */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --border-radius: 8px;
+  --card-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+
+  /* Components - Dashboard Layout */
+  --sidebar-width: 250px;
+  --content-area-flex-grow: 1;
+
+  /* Components - Card */
+  --card-background-color: #2C2C2C;
+  --card-padding: 1.5rem;
+
+  /* Components - Button */
+  --button-primary-background-color: var(--color-primary);
+  --button-primary-text-color: var(--color-text-primary);
+  --button-primary-border-radius: 4px;
+  --button-secondary-background-color: transparent;
+  --button-secondary-border: 1px solid var(--color-primary);
+  --button-secondary-text-color: var(--color-primary);
+
+  /* Components - Chart */
+  --chart-line-color: var(--color-primary);
+  --chart-fill-color: rgba(76, 175, 80, 0.2);
+  --chart-label-color: var(--color-text-secondary);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
