@@ -59,7 +59,7 @@ const router = createRouter({
         {
           path: '', // Default child route for /dashboard
           name: 'dashboard-default', // Add a name to resolve the warning
-          redirect: '/dashboard/map'
+          component: () => import('../components/DashboardHome.vue')
         }
       ]
     },
