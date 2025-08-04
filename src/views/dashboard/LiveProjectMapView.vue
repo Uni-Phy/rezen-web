@@ -485,9 +485,6 @@ export default {
   border-radius: 2px;
 }
 
-  transition: all 0.3s ease;
-}
-
 .card-panel {
   display: flex;
   flex-wrap: wrap;
