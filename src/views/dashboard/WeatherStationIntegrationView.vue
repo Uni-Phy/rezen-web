@@ -115,7 +115,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import ApexCharts from 'apexcharts'; // Import ApexCharts
 
 // Helper function to get CSS variables
 const getCssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name);

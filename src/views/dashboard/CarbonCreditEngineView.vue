@@ -128,13 +128,9 @@
 
 <script>
 import { ref } from 'vue';
-import VueApexCharts from 'vue3-apexcharts';
 
 export default {
   name: 'CarbonCreditEngineView',
-  components: {
-    apexchart: VueApexCharts,
-  },
   setup() {
     // Helper to get CSS variables
     const getCssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name);

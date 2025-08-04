@@ -68,13 +68,9 @@
 
 <script>
 import { ref } from 'vue';
-import ApexCharts from 'apexcharts'; // Import ApexCharts
 
 export default {
   name: 'ProjectPortfolioDashboardView',
-  components: {
-    apexchart: ApexCharts, // Register ApexCharts component
-  },
   setup() {
     // Mock Data for Section 1: Total Area Under Restoration
     const areaRestorationSeries = ref([{
