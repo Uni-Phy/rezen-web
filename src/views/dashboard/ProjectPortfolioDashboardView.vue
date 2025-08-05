@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard-container">
-    <h2 class="dashboard-title">Project Portfolio Dashboard</h2>
+  <PageTemplate title="Project Portfolio Dashboard" subtitle="Comprehensive overview of restoration projects, carbon credits, and biodiversity metrics">
+    <div class="dashboard-container">
 
     <div class="dashboard-grid">
       <!-- Section 1: Total Area Under Restoration -->
@@ -63,14 +63,19 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </PageTemplate>
 </template>
 
 <script>
 import { ref } from 'vue';
+import PageTemplate from '../../components/PageTemplate.vue';
 
 export default {
   name: 'ProjectPortfolioDashboardView',
+  components: {
+    PageTemplate
+  },
   setup() {
     // Mock Data for Section 1: Total Area Under Restoration
     const areaRestorationSeries = ref([{
@@ -329,56 +334,57 @@ export default {
 
 <style scoped>
 .dashboard-container {
-  padding: var(--spacing-lg);
-  background-color: var(--card-background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
-  color: var(--color-text-primary);
-}
-
-.dashboard-title {
-  font-size: var(--font-size-heading3);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-xl);
-  text-align: center;
+  padding: 0;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: var(--spacing-lg);
-  height: calc(100vh - 200px); /* Adjust based on header/footer height */
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: var(--spacing-xl);
+  auto-rows: min-content;
 }
 
 .dashboard-section {
-  background-color: #2C2C2C;
+  background: var(--card-background-color);
   padding: var(--card-padding);
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  overflow: auto; /* Enable scrolling for content within sections */
+  transition: all var(--transition-normal);
+}
+
+.dashboard-section:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
 .dashboard-section h3 {
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-heading4);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .kpi-container {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  justify-content: center;
 }
 
 .kpi-value {
-  font-size: var(--font-size-heading1);
+  font-size: var(--font-size-heading3);
   color: var(--color-primary);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-sm);
+  margin: 0;
+  text-align: center;
+  line-height: var(--line-height-tight);
 }
 
 .kpi-value span {
@@ -387,6 +393,41 @@ export default {
 
 .chart-container {
   width: 100%;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+}
+
+.chart-container:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    gap: var(--spacing-md);
+  }
+  
+  .dashboard-section {
+    padding: var(--spacing-lg);
+  }
+  
+  .kpi-container {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .kpi-value {
+    font-size: var(--font-size-heading4);
+  }
 }
 </style>

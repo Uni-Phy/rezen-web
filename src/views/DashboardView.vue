@@ -2,7 +2,6 @@
   <div class="dashboard-layout">
     <DashboardSidebar />
     <main class="dashboard-content">
-      <h1 class="dashboard-main-title">Rezen Dashboard</h1>
       <router-view />
     </main>
   </div>
@@ -33,11 +32,13 @@ export default {
 }
 
 .dashboard-main-title {
-  font-size: var(--font-size-heading1);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-lg);
-  text-align: center;
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-heading3);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xl);
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .dashboard-overview {

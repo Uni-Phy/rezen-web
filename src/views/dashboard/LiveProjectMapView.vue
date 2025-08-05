@@ -1,93 +1,101 @@
 <template>
-  <div class="tab-content">
-    <h2 class="tab-title">Live Project Map View</h2>
-    
-    <!-- Map Controls -->
-    <div class="map-controls">
-      <div class="control-group">
-        <label>Select Index:</label>
-        <select v-model="selectedIndex" @change="updateHeatmap" class="index-selector">
-          <option value="co2">CO₂ Concentration</option>
-          <option value="soilCarbon">Soil Carbon Content</option>
-          <option value="biomass">Biomass Density</option>
-        </select>
+  <div class="regenerative-dashboard">
+    <!-- KPI Overview Cards -->
+    <div class="kpi-overview">
+      <div class="kpi-card ecosystem">
+        <div class="kpi-icon">🌱</div>
+        <div class="kpi-content">
+          <div class="kpi-value">385 <span class="kpi-unit">ppm</span></div>
+          <div class="kpi-label">CO₂ Concentration</div>
+          <div class="kpi-trend positive">↓ 2.3% from last month</div>
+        </div>
       </div>
       
-      <div class="control-group">
-        <label>Animation:</label>
-        <button @click="toggleAnimation" class="animation-btn" :class="{ active: isAnimating }">
-          {{ isAnimating ? 'Pause' : 'Play' }} Time-lapse
+      <div class="kpi-card soil">
+        <div class="kpi-icon">🌍</div>
+        <div class="kpi-content">
+          <div class="kpi-value">3.2<span class="kpi-unit">%</span></div>
+          <div class="kpi-label">Soil Carbon Content</div>
+          <div class="kpi-trend positive">↑ 1.1% from last month</div>
+        </div>
+      </div>
+      
+      <div class="kpi-card biomass">
+        <div class="kpi-icon">🌾</div>
+        <div class="kpi-content">
+          <div class="kpi-value">127 <span class="kpi-unit">t/ha</span></div>
+          <div class="kpi-label">Biomass Density</div>
+          <div class="kpi-trend positive">↑ 5.7% from last month</div>
+        </div>
+      </div>
+      
+      <div class="kpi-card projects">
+        <div class="kpi-icon">📍</div>
+        <div class="kpi-content">
+          <div class="kpi-value">2,340 <span class="kpi-unit">ha</span></div>
+          <div class="kpi-label">Project Areas</div>
+          <div class="kpi-trend positive">↑ 12 ha this week</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive 3D Map Section -->
+    <div class="map-section">
+      <div class="map-controls">
+        <button @click="toggleNightMode" class="control-btn" :class="{ active: nightMode }">
+          {{ nightMode ? '☀️' : '🌙' }} {{ nightMode ? 'Day' : 'Night' }}
+        </button>
+        <button @click="resetView" class="control-btn">
+          🎯 Reset View
         </button>
       </div>
       
-      <div class="control-group" v-if="isAnimating">
-        <label>Speed: {{ animationSpeed }}x</label>
-        <input type="range" v-model="animationSpeed" min="0.5" max="3" step="0.5" class="speed-slider">
-      </div>
+      <ThreeDMapView :nightModeControl="nightMode" />
     </div>
 
-    <!-- Map Container -->
-    <div class="map-container">
-      <div id="mapid" class="map-view"></div>
-      
-      <!-- Legend -->
-      <div class="map-legend">
-        <h4>{{ indexLabels[selectedIndex] }}</h4>
-        <div class="legend-scale">
-          <div class="legend-item" v-for="(item, index) in currentLegend" :key="index">
-            <div class="legend-color" :style="{ backgroundColor: item.color }"></div>
-            <span>{{ item.label }}</span>
-          </div>
+    <!-- Analytics Charts Grid -->
+    <div class="analytics-grid">
+      <div class="chart-card co2-chart">
+        <div class="chart-header">
+          <h4>🌱 CO₂ Trends</h4>
+          <span class="chart-period">Last 12 months</span>
         </div>
+        <apexchart type="area" :options="co2ChartOptions" :series="co2Series"></apexchart>
       </div>
       
-      <!-- Live Stats Panel -->
-      <div class="stats-panel">
-        <div class="stat-item">
-          <span class="stat-label">Active Projects</span>
-          <span class="stat-value">{{ liveStats.activeProjects }}</span>
+      <div class="chart-card soil-chart">
+        <div class="chart-header">
+          <h4>🌍 Soil Carbon Progress</h4>
+          <span class="chart-period">Last 12 months</span>
         </div>
-        <div class="stat-item">
-          <span class="stat-label">Data Points</span>
-          <span class="stat-value">{{ liveStats.dataPoints }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Last Updated</span>
-          <span class="stat-value">{{ formatTime(liveStats.lastUpdated) }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Chart Section -->
-    <div class="chart-section">
-      <div class="chart-card">
-        <h3>{{ indexLabels[selectedIndex] }} Trend Over Time</h3>
-        <apexchart type="line" :options="trendChartOptions" :series="trendSeries"></apexchart>
+        <apexchart type="line" :options="soilChartOptions" :series="soilSeries"></apexchart>
       </div>
       
-      <!-- Real-time metrics -->
-      <div class="metrics-grid">
-        <div class="metric-card" v-for="metric in currentMetrics" :key="metric.name">
-          <h4>{{ metric.name }}</h4>
-          <div class="metric-value" :class="metric.trend">
-            {{ metric.value }}
-            <span class="trend-icon">{{ metric.trendIcon }}</span>
-          </div>
-          <div class="metric-change">{{ metric.change }}</div>
+      <div class="chart-card biomass-chart">
+        <div class="chart-header">
+          <h4>🌾 Biomass Growth</h4>
+          <span class="chart-period">Last 12 months</span>
         </div>
+        <apexchart type="bar" :options="biomassChartOptions" :series="biomassSeries"></apexchart>
+      </div>
+      
+      <div class="chart-card projects-chart">
+        <div class="chart-header">
+          <h4>📍 Project Expansion</h4>
+          <span class="chart-period">Last 12 months</span>
+        </div>
+        <apexchart type="area" :options="projectsChartOptions" :series="projectsSeries"></apexchart>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.heat';
-
+import { ref } from 'vue';
+import ThreeDMapView from '../../components/ThreeDMapView.vue';
 export default {
   name: 'LiveProjectMapView',
+  components: { ThreeDMapView },
   setup() {
     const ndviSeries = ref([
       {
@@ -137,8 +145,6 @@ export default {
       },
     });
 
-    const map = ref(null);
-    const heatmapLayer = ref(null);
     const selectedIndex = ref('co2');
     const isAnimating = ref(false);
     const animationSpeed = ref(1);
@@ -240,25 +246,8 @@ export default {
     });
 
     const updateHeatmap = () => {
-      if (heatmapLayer.value) {
-        map.value.removeLayer(heatmapLayer.value);
-      }
-
-      const data = indexData[selectedIndex.value];
-      heatmapLayer.value = L.heatLayer(data.points, {
-        radius: 25,
-        max: data.max,
-        gradient: {
-          0.0: 'blue',
-          0.3: 'cyan', 
-          0.5: 'lime',
-          0.7: 'yellow',
-          1.0: 'red'
-        }
-      }).addTo(map.value);
-      
       // Update legend
-      currentLegend.value = data.legend;
+      currentLegend.value = indexData[selectedIndex.value].legend;
       
       // Update chart data based on selected index
       if (selectedIndex.value === 'co2') {
@@ -299,27 +288,80 @@ export default {
       return date.toLocaleTimeString();
     }
 
-    onMounted(() => {
-      map.value = L.map('mapid').setView([39.8283, -98.5795], 3);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map.value);
+    // Initialize with default data
+    updateHeatmap();
+    
+    // Update stats periodically
+    setInterval(() => {
+      liveStats.value.lastUpdated = new Date();
+      liveStats.value.dataPoints += Math.floor(Math.random() * 5);
+    }, 5000);
 
-      updateHeatmap();
-      
-      // Update stats periodically
-      setInterval(() => {
-        liveStats.value.lastUpdated = new Date();
-        liveStats.value.dataPoints += Math.floor(Math.random() * 5);
-      }, 5000);
+    // New chart series for the 4 separate charts
+    const co2Series = ref([{
+      name: 'CO₂ Levels',
+      data: [390, 388, 385, 382, 380, 378, 375, 373, 370, 368, 365, 362]
+    }]);
+    
+    const soilSeries = ref([{
+      name: 'Soil Carbon',
+      data: [2.1, 2.3, 2.5, 2.7, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6]
+    }]);
+    
+    const biomassSeries = ref([{
+      name: 'Biomass',
+      data: [85, 90, 95, 100, 105, 110, 115, 120, 125, 127, 130, 135]
+    }]);
+    
+    const projectsSeries = ref([{
+      name: 'Project Areas',
+      data: [2100, 2150, 2200, 2230, 2250, 2280, 2300, 2310, 2320, 2330, 2340, 2350]
+    }]);
+    
+    // Chart options for each type
+    const co2ChartOptions = ref({
+      chart: { type: 'area', height: 200, toolbar: { show: false }, sparkline: { enabled: true } },
+      colors: ['#4CAF50'],
+      fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.2 } },
+      stroke: { curve: 'smooth', width: 2 },
+      tooltip: { theme: 'dark' }
     });
+    
+    const soilChartOptions = ref({
+      chart: { type: 'line', height: 200, toolbar: { show: false }, sparkline: { enabled: true } },
+      colors: ['#FF6B35'],
+      stroke: { curve: 'smooth', width: 3 },
+      tooltip: { theme: 'dark' }
+    });
+    
+    const biomassChartOptions = ref({
+      chart: { type: 'bar', height: 200, toolbar: { show: false }, sparkline: { enabled: true } },
+      colors: ['#FFD23F'],
+      plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+      tooltip: { theme: 'dark' }
+    });
+    
+    const projectsChartOptions = ref({
+      chart: { type: 'area', height: 200, toolbar: { show: false }, sparkline: { enabled: true } },
+      colors: ['#6C5CE7'],
+      fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.2 } },
+      stroke: { curve: 'smooth', width: 2 },
+      tooltip: { theme: 'dark' }
+    });
+    
+    const nightMode = ref(false);
+    
+    const toggleNightMode = () => {
+      nightMode.value = !nightMode.value;
+    };
+    
+    const resetView = () => {
+      // Reset view logic
+    };
 
     return {
       ndviSeries,
       ndviChartOptions,
-      map,
-      heatmapLayer,
       selectedIndex,
       isAnimating,
       animationSpeed,
@@ -331,7 +373,18 @@ export default {
       formatTime,
       currentMetrics,
       trendSeries,
-      trendChartOptions
+      trendChartOptions,
+      co2Series,
+      soilSeries,
+      biomassSeries,
+      projectsSeries,
+      co2ChartOptions,
+      soilChartOptions,
+      biomassChartOptions,
+      projectsChartOptions,
+      nightMode,
+      toggleNightMode,
+      resetView
     };
   },
 };
@@ -583,5 +636,257 @@ export default {
 .metric-change {
   font-size: var(--font-size-small);
   color: var(--color-text-secondary);
+}
+
+/* Regenerative Dashboard Styles */
+.regenerative-dashboard {
+  padding: var(--spacing-md);
+  max-width: 100%;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+  min-height: 100vh;
+}
+
+/* KPI Overview Cards */
+.kpi-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.kpi-card {
+  background: rgba(44, 44, 44, 0.95);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.kpi-card:hover::before {
+  opacity: 1;
+}
+
+.kpi-card.ecosystem { border-left: 4px solid #4CAF50; }
+.kpi-card.soil { border-left: 4px solid #FF6B35; }
+.kpi-card.biomass { border-left: 4px solid #FFD23F; }
+.kpi-card.projects { border-left: 4px solid #6C5CE7; }
+
+.kpi-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.kpi-content {
+  flex-grow: 1;
+}
+
+.kpi-value {
+  font-size: var(--font-size-heading2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+  line-height: 1.2;
+}
+
+.kpi-unit {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-normal);
+  opacity: 0.8;
+}
+
+.kpi-label {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.kpi-trend {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-success, #10b981);
+}
+
+.kpi-trend.positive {
+  color: var(--color-success, #10b981);
+}
+
+.kpi-trend.negative {
+  color: var(--color-error, #ef4444);
+}
+
+/* Map Section */
+.map-section {
+  margin-bottom: var(--spacing-xl);
+  position: relative;
+}
+
+.map-controls {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  z-index: 100;
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.control-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(44, 44, 44, 0.9);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: var(--font-size-small);
+  backdrop-filter: blur(10px);
+}
+
+.control-btn:hover,
+.control-btn.active {
+  background: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Analytics Grid */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.chart-card {
+  background: rgba(44, 44, 44, 0.95);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.chart-header h4 {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+}
+
+.chart-period {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+/* Specific chart card colors */
+.co2-chart { border-left: 4px solid #4CAF50; }
+.soil-chart { border-left: 4px solid #FF6B35; }
+.biomass-chart { border-left: 4px solid #FFD23F; }
+.projects-chart { border-left: 4px solid #6C5CE7; }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .kpi-overview {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  
+  .analytics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .regenerative-dashboard {
+    padding: var(--spacing-sm);
+  }
+  
+  .kpi-overview {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .kpi-card {
+    padding: var(--spacing-md);
+  }
+  
+  .kpi-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .kpi-value {
+    font-size: var(--font-size-heading3);
+  }
+  
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .map-controls {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-bottom: var(--spacing-md);
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-card {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm);
+  }
+  
+  .control-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
 }
 </style>

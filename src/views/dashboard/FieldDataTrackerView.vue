@@ -1,6 +1,6 @@
 <template>
-  <div class="tab-content">
-    <h2 class="tab-title">Field Data Tracker</h2>
+  <PageTemplate title="Field Data Tracker" subtitle="Monitor crop health, field logs, and biomass sampling data">
+    <div class="field-data-dashboard">
 
     <div class="metrics-grid">
       <div class="metric-card">
@@ -45,14 +45,19 @@
       <h3>Biomass Sampling Data</h3>
       <apexchart type="bar" :options="biomassChartOptions" :series="biomassSeries"></apexchart>
     </div>
-  </div>
+    </div>
+  </PageTemplate>
 </template>
 
 <script>
 import { ref } from 'vue';
+import PageTemplate from '../../components/PageTemplate.vue';
 
 export default {
   name: 'FieldDataTrackerView',
+  components: {
+    PageTemplate
+  },
   setup() {
     const cropHealthSeries = ref([85]); // Percentage for radial bar
 

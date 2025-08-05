@@ -55,28 +55,43 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--color-background);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-background-secondary) 100%);
+  padding: var(--spacing-lg);
 }
 
 .login-card {
-  background-color: var(--card-background-color);
-  padding: var(--card-padding);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
+  background: var(--card-background-color);
+  padding: var(--spacing-3xl);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow-elevated);
+  border: 1px solid var(--color-border);
   text-align: center;
   width: 100%;
-  max-width: 90%; /* Allow it to take more width on larger screens */
-  width: 400px; /* Set a preferred width */
+  max-width: 420px;
+  position: relative;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
 }
 
 .login-title {
   font-size: var(--font-size-heading2);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2xl);
+  letter-spacing: -0.02em;
 }
 
 .login-form .form-group {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
   text-align: left;
 }
 
@@ -85,47 +100,64 @@ export default {
   margin-bottom: var(--spacing-sm);
   color: var(--color-text-secondary);
   font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
 }
 
 .login-form input[type="text"],
 .login-form input[type="password"] {
-  width: calc(100% - 20px); /* Adjust for padding */
-  padding: var(--spacing-md);
-  border: 1px solid #444;
-  border-radius: 4px;
-  background-color: #333;
+  width: 100%;
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-background-secondary);
   color: var(--color-text-primary);
   font-size: var(--font-size-body);
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
 }
 
 .login-form input[type="text"]:focus,
 .login-form input[type="password"]:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  background-color: var(--color-surface);
 }
 
 .primary-button {
-  background-color: var(--button-primary-background-color);
-  color: var(--button-primary-text-color);
-  padding: var(--spacing-md) var(--spacing-lg);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: var(--color-background);
+  padding: var(--spacing-lg) var(--spacing-xl);
   border: none;
-  border-radius: var(--button-primary-border-radius);
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
-  transition: background-color 0.3s ease;
+  font-family: var(--font-family);
+  transition: all var(--transition-fast);
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .primary-button:hover {
-  background-color: darken(var(--color-primary), 10%); /* This will not work directly in CSS, needs SASS/LESS or JS */
-  opacity: 0.9; /* Fallback for hover effect */
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.primary-button:active {
+  transform: translateY(0);
 }
 
 .error-message {
-  color: #FF5252; /* A distinct error color */
-  margin-top: var(--spacing-md);
+  color: var(--color-error);
+  margin-top: var(--spacing-lg);
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-md);
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+  border-radius: var(--border-radius-sm);
 }
 </style>

@@ -78,27 +78,26 @@ export default {
 
 <style scoped>
 .dashboard-home {
-  padding: var(--spacing-lg);
+  padding: 0;
 }
 
 .overview-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
 }
 
 .overview-card {
-  background: linear-gradient(135deg, var(--card-background-color) 0%, 
-      color-mix(in srgb, var(--card-background-color) 95%, var(--color-primary) 5%) 100%);
+  background: var(--card-background-color);
   border-radius: var(--border-radius);
-  padding: var(--spacing-lg);
+  padding: var(--card-padding);
   box-shadow: var(--card-shadow);
   border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  transition: all 0.3s ease;
+  gap: var(--spacing-lg);
+  transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
 }

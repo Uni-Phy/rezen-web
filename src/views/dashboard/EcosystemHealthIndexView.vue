@@ -1,6 +1,6 @@
 <template>
-  <div class="ecosystem-health-dashboard">
-    <h2 class="dashboard-title">Ecosystem Health Index</h2>
+  <PageTemplate title="Ecosystem Health Index" subtitle="Assessing water table levels, biodiversity, and microclimate shifts">
+    <div class="ecosystem-health-dashboard">
 
     <div class="dashboard-grid">
       <!-- Section 1: Water Table Levels & Recharge Rates -->
@@ -91,14 +91,19 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </PageTemplate>
 </template>
 
 <script>
 import { ref } from 'vue';
+import PageTemplate from '../../components/PageTemplate.vue';
 
 export default {
   name: 'EcosystemHealthIndexView',
+  components: {
+    PageTemplate
+  },
   setup() {
     // Section 1: Water Table Levels & Recharge Rates
     const currentWaterTableLevel = ref(15.2); // meters below surface
@@ -310,100 +315,153 @@ export default {
 
 <style scoped>
 .ecosystem-health-dashboard {
-  padding: var(--spacing-lg);
-  background-color: var(--card-background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
-  color: var(--color-text-primary);
-}
-
-.dashboard-title {
-  font-size: var(--font-size-heading3);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-xl);
-  text-align: center;
+  padding: 0;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: var(--spacing-xl);
+  auto-rows: min-content;
 }
 
 .section-card {
-  background-color: #2C2C2C;
+  background: var(--card-background-color);
   padding: var(--card-padding);
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  transition: all var(--transition-normal);
+}
+
+.section-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
 .section-card h3 {
-  color: var(--color-primary);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-heading4);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-lg);
   text-align: center;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .kpis {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
 }
 
 .kpi-item {
   text-align: center;
-  margin: var(--spacing-sm);
+  background: var(--color-background-secondary);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+  min-width: 140px;
+}
+
+.kpi-item:hover {
+  background: var(--color-surface-elevated);
+  transform: translateY(-1px);
 }
 
 .kpi-value {
-  font-size: var(--font-size-heading2);
-  color: var(--color-accent);
+  font-size: var(--font-size-heading3);
+  color: var(--color-primary);
   font-weight: var(--font-weight-bold);
   display: block;
+  margin-bottom: var(--spacing-xs);
+  line-height: var(--line-height-tight);
 }
 
 .kpi-label {
   font-size: var(--font-size-small);
   color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
 }
 
 .chart-container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.chart-container > * {
+  background: var(--color-background-secondary);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
 }
 
 @media (min-width: 768px) {
   .chart-container {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 }
 
 .value-card {
-  background-color: #3a3a3a;
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius);
+  background: var(--color-surface-elevated);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+
+.value-card:hover {
+  background: var(--card-background-elevated);
+  transform: translateY(-1px);
 }
 
 .value-label {
   font-size: var(--font-size-body);
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
 }
 
 .value-data {
-  font-size: var(--font-size-body);
-  color: var(--color-accent);
+  font-size: var(--font-size-heading4);
+  color: var(--color-primary);
   font-weight: var(--font-weight-bold);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    gap: var(--spacing-md);
+  }
+  
+  .section-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .kpis {
+    flex-direction: column;
+  }
+  
+  .kpi-item {
+    min-width: auto;
+  }
 }
 </style>
